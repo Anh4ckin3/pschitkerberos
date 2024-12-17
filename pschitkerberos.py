@@ -65,6 +65,7 @@ def main():
     print(banner)
     # IF file is given on argument
     if args.hashfile:
+        print(f"[+] Testing multiple hashes from file: {args.hashfile} against domain: {args.domain}")
         with open(args.hashfile, 'r') as hash:
             for line in hash:
                 hash = line.strip()
@@ -78,6 +79,7 @@ def main():
                             print(f'[-] {args.username}:{args.hash}', kerberos_sprayer.spray())
     # IF just one is given on argument
     if args.hash:
+        print(f"[+] Testing a single hash against domain: {args.domain}")
         kerberos_sprayer = PschittKerberos(user=args.username, domain=args.domain, hash=args.hash, password=None, aesKey=None, dc_ip=args.dc, verbose=args.verbose)
         match kerberos_sprayer.spray():
             case True:
