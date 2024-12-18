@@ -1,12 +1,8 @@
 # pschitkerberos
 
-## Author
-
-- [@Anh4ckin3](https://www.github.com/Anh4ckin3)
-
 ## Description
 
-PschittKerberos is a tool for performing Kerberos authentication spraying attacks. This tool validates NTLM hashes against a Kerberos by attempting to retrieve a Ticket Granting Ticket (TGT). It supports individual NTLM hashes or files containing multiple hashes.
+PschittKerberos is a tool for performing Kerberos authentication spraying attacks. This tool validates NTLM hashes against a Kerberos by attempting to retrieve a Ticket Granting Ticket (KRB_AS_REQ). It supports individual NTLM hashes or files containing multiple hashes.
 
 ## Requirements
 
