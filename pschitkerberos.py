@@ -12,7 +12,7 @@ from impacket.krb5 import constants
 import socket
 from binascii import unhexlify
 
-class PschittKerberos:
+class PschitKerberos:
     def __init__(self, user, domain, hash, password=None, aesKey=None, dc_ip=None, verbose=False):
         self.user = user
         self.domain = domain
@@ -50,7 +50,7 @@ class PschittKerberos:
 
 def main():
 
-    banner = pyfiglet.figlet_format("PschittKerberos") 
+    banner = pyfiglet.figlet_format("PschitKerberos") 
 
     parser = argparse.ArgumentParser(description="Ca spray fort !")
     parser.add_argument('-username', help='Username used to spray NTLM hash(es)')
@@ -69,10 +69,10 @@ def main():
         with open(args.hashfile, 'r') as hash:
             for line in hash:
                 hash = line.strip()
-                kerberos_sprayer = PschittKerberos(user=args.username, domain=args.domain, hash=hash, password=None, aesKey=None, dc_ip=args.dc, verbose=args.verbose)
+                kerberos_sprayer = PschitKerberos(user=args.username, domain=args.domain, hash=hash, password=None, aesKey=None, dc_ip=args.dc, verbose=args.verbose)
                 match kerberos_sprayer.spray():
                     case True:
-                        print(f'[+] {args.username}:{hash} is valid creds')
+                        print(f'[+] {args.username}:{hash} is valid credential')
                         break
                     case _:
                         if args.verbose:
@@ -80,10 +80,10 @@ def main():
     # IF just one is given on argument
     if args.hash:
         print(f"[+] Testing a single hash against domain: {args.domain}")
-        kerberos_sprayer = PschittKerberos(user=args.username, domain=args.domain, hash=args.hash, password=None, aesKey=None, dc_ip=args.dc, verbose=args.verbose)
+        kerberos_sprayer = PschitKerberos(user=args.username, domain=args.domain, hash=args.hash, password=None, aesKey=None, dc_ip=args.dc, verbose=args.verbose)
         match kerberos_sprayer.spray():
             case True:
-                print(f'[+] {args.username}:{args.hash} is valid creds')
+                print(f'[+] {args.username}:{args.hash} is valid credential')
             case _:
                 if args.verbose:
                  print(f'[-] {args.username}:{args.hash}', kerberos_sprayer.spray())
