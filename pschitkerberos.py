@@ -35,10 +35,12 @@ class PschitKerberos:
             return True
             
         except KerberosError as e:
-            if (e.getErrorCode() == constants.ErrorCodes.KDC_ERR_C_PRINCIPAL_UNKNOWN.value) or (e.getErrorCode() == constants.ErrorCodes.KDC_ERR_CLIENT_REVOKED.value) or (e.getErrorCode() == constants.ErrorCodes.KDC_ERR_WRONG_REALM.value) or (e.getErrorCode() == constants.ErrorCodes.KDC_ERR_PREAUTH_FAILED.value):
+            if (e.getErrorCode() == constants.ErrorCodes.KDC_ERR_CLIENT_REVOKED.value) or (e.getErrorCode() == constants.ErrorCodes.KDC_ERR_WRONG_REALM.value) or (e.getErrorCode() == constants.ErrorCodes.KDC_ERR_PREAUTH_FAILED.value):
                 if self.verbose:
                     print(f"[-] Kerberos error: {e}")
                 return e
+            elif e.getErrorCode() == constants.ErrorCodes.KDC_ERR_C_PRINCIPAL_UNKNOWN.value:
+                return False
             else:
                 if self.verbose:
                     print(f"[+] Successful authentication for {self.user}:{self.hash}")
@@ -73,6 +75,9 @@ def main():
                 match kerberos_sprayer.spray():
                     case True:
                         print(f'[+] {args.username}:{hash} is valid credential')
+                        break
+                    case False:
+                        print(f'[-] {args.username} does not exist in the domain {args.domain}')
                         break
                     case _:
                         if args.verbose:
