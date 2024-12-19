@@ -89,6 +89,8 @@ def main():
         match kerberos_sprayer.spray():
             case True:
                 print(f'[+] {args.username}:{args.hash} is valid credential')
+            case False:
+                print(f'[-] {args.username} does not exist in the domain {args.domain}')
             case _:
                 if args.verbose:
                  print(f'[-] {args.username}:{args.hash}', kerberos_sprayer.spray())
