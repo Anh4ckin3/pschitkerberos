@@ -4,6 +4,8 @@
 
 PschitKerberos is a tool for performing Kerberos authentication spraying attacks. This tool validates NT hashes against a Kerberos by attempting to retrieve a Ticket Granting Ticket (KRB_AS_REQ). It supports individual NT hashes or files containing multiple hashes.
 
+PS:The tool assumes that the user provided as an argument is a valid domain user; if not, the program will terminate. To verify if a domain user is valid, [Kerbrute](https://github.com/ropnop/kerbrute) (Go) will do the job.
+
 ## Requirements
 
 - Python 3.8 or later.
