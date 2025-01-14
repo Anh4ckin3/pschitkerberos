@@ -105,16 +105,16 @@ def main():
                 
                 match kerberos_sprayer.status:
                     case 'success':
-                        print(f'{status_form.status_format('success')} {args.username}:{hash} is valid credential')
+                        print(f'{status_form.status_format("success")} {args.username}:{hash} is valid credential')
                         break
                     case 'error_user':
-                        print(f'{status_form.status_format('error')} {args.username} does not exist in the domain {args.domain}')
+                        print(f'{status_form.status_format("error")} {args.username} does not exist in the domain {args.domain}')
                         break
                     case 'error_connect':
-                        print(f'{status_form.status_format('error')} could not connect to DC')
+                        print(f'{status_form.status_format("error")} could not connect to DC')
                         break
                     case 'error_cred':
-                        print(f'{status_form.status_format('error')} {args.username}:{hash} is not a valid credential')
+                        print(f'{status_form.status_format("error")} {args.username}:{hash} is not a valid credential')
 
     # IF just one is given on argument
     if args.hash:
@@ -123,16 +123,16 @@ def main():
         kerberos_sprayer.spray()
         match kerberos_sprayer.status:
             case 'success':
-                print(f'{status_form.status_format('success')} {args.username}:{args.hash} is valid credential')
+                print(f'{status_form.status_format("success")} {args.username}:{args.hash} is valid credential')
                 
             case 'error_user':
-                print(f'{status_form.status_format('error')} {args.username} does not exist in the domain {args.domain}')
+                print(f'{status_form.status_format("error")} {args.username} does not exist in the domain {args.domain}')
                 
             case 'error_connect':
-                print(f'{status_form.status_format('error')} could not connect to DC')
+                print(f'{status_form.status_format("error")} could not connect to DC')
                 
             case 'error_cred':
-                print(f'{status_form.status_format('error')} {args.username}:{args.hash} is not a valid credential')
+                print(f'{status_form.status_format("error")} {args.username}:{args.hash} is not a valid credential')
 
     if not args.hash and not args.hashfile:
         parser.error('-hash or -hashfile is required')
