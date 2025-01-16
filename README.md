@@ -33,10 +33,10 @@ options:
 ## Examples
 Spray a Single NTLM Hash :
 ```
-> python pschitkerberos.py -username john.doe -hash 0123456789abcdef0123456789abcdef -domain example.com -dc 192.168.1.1 
+> python pschitkerberos.py -username john.pork -hash 0123456789abcdef0123456789abcdef -domain example.com -dc 192.168.1.1 
 ```
 
 Spray Multiple NTLM Hashes from a File
 ```
-> python pschitkerberos.py -username john.doe -hashfile hashes.txt -domain example.com -dc 192.168.1.1
+> python pschitkerberos.py -username john.pork -hashfile hashes.txt -domain example.com -dc 192.168.1.1
 ```
